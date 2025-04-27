@@ -28,7 +28,8 @@ public class EditorQuickActions : ModuleRules
 			new string[]
 			{
 				"Core",
-				"Blutility"
+				"Blutility",
+				"EditorScriptingUtilities",
 			}
 		);
 
@@ -39,7 +40,7 @@ public class EditorQuickActions : ModuleRules
 				"CoreUObject",
 				"Engine",
 				"Slate",
-				"SlateCore",
+				"SlateCore"
 			}
 		);
 

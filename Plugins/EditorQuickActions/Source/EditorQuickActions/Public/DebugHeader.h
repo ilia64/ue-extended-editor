@@ -8,9 +8,11 @@ inline void Print(const FString& Message, const FColor& Color = FColor::Cyan)
 	{
 		GEngine->AddOnScreenDebugMessage(-1, 8.f, Color, Message);
 	}
+
+	UE_LOG(LogTemp, Warning, TEXT("%s"), *Message);
 }
 
-inline void Log(const FString& Message)
+inline void PrintError(const FString& Message)
 {
-	UE_LOG(LogTemp, Warning, TEXT("%s"), *Message);
+	Print(Message, FColor::Red);
 }
