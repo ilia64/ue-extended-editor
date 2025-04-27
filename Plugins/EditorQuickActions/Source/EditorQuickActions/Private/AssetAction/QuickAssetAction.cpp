@@ -3,10 +3,10 @@
 
 #include "AssetAction/QuickAssetAction.h"
 
+#include "DebugHeader.h"
+
 void UQuickAssetAction::Test()
 {
-	if (GEngine)
-	{
-		GEngine->AddOnScreenDebugMessage(-1, 8.f, FColor::Cyan, TEXT("Working"));
-	}
+	Print(TEXT("Working"));
+	Log(TEXT("Working"));
 }
