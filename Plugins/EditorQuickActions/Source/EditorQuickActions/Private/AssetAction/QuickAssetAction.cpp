@@ -3,16 +3,20 @@
 
 #include "AssetAction/QuickAssetAction.h"
 
-#include "DebugHeader.h"
 #include "EditorUtilityLibrary.h"
 #include "EditorAssetLibrary.h"
-
+#include "Framework/Notifications/NotificationManager.h"
+#include "Misc/MessageDialog.h"
+#include "Widgets/Notifications/SNotificationList.h"
 
 void UQuickAssetAction::DuplicateAssets(const int32 NumOfDuplicates)
 {
 	if (NumOfDuplicates <= 0)
 	{
-		PrintError("Please enter a VALID number ob duplicates");
+		const FText MessageTitle = FText::FromString(TEXT("Warning"));
+		const FText Message = FText::FromString(TEXT("Please enter a VALID number ob duplicates!"));
+		FMessageDialog::Open(EAppMsgType::Ok, Message, MessageTitle);
+
 		return;
 	}
 
@@ -41,5 +45,12 @@ void UQuickAssetAction::DuplicateAssets(const int32 NumOfDuplicates)
 		}
 	}
 
-	Print(TEXT("Successfully Duplicated " + FString::FromInt(Counter) + " Assets"));
+	if (Counter)
+	{
+		FNotificationInfo NotificationInfo(FText::FromString(TEXT("Successfully Duplicated " + FString::FromInt(Counter) + " Assets")));
+		NotificationInfo.bUseLargeFont = true;
+		NotificationInfo.FadeOutDuration = 7.f;
+
+		FSlateNotificationManager::Get().AddNotification(NotificationInfo);
+	}
 }
