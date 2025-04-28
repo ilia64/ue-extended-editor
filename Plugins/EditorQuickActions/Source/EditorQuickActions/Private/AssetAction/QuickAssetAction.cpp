@@ -6,6 +6,7 @@
 #include "DebugHeader.h"
 #include "EditorUtilityLibrary.h"
 #include "EditorAssetLibrary.h"
+#include "ObjectTools.h"
 #include "Misc/MessageDialog.h"
 
 void UQuickAssetAction::DuplicateAssets(const int32 NumOfDuplicates)
@@ -97,5 +98,33 @@ void UQuickAssetAction::AddPrefix()
 	if (Counter)
 	{
 		Notify(TEXT("Successfully renamed " + FString::FromInt(Counter) + " assets"));
+	}
+}
+
+void UQuickAssetAction::RemoveUnused()
+{
+	TArray<FAssetData> AssetDataArray = UEditorUtilityLibrary::GetSelectedAssetData();
+	TArray<FAssetData> UnusedAssets;
+
+	for (FAssetData& AssetData : AssetDataArray)
+	{
+		TArray<FString> References = UEditorAssetLibrary::FindPackageReferencersForAsset(AssetData.GetObjectPathString(), true);
+		if (References.IsEmpty())
+		{
+			UnusedAssets.Add(AssetData);
+		}
+	}
+
+	if (UnusedAssets.IsEmpty())
+	{
+		Notify(TEXT("No unused assets!"));
+
+		return;
+	}
+
+	const int32 DeleteCount = ObjectTools::DeleteAssets(UnusedAssets);
+	if (DeleteCount > 0)
+	{
+		Notify(TEXT("Successfully deleted " + FString::FromInt(DeleteCount) + " unused assets"));
 	}
 }

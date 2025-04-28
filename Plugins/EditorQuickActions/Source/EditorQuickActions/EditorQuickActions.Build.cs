@@ -40,7 +40,8 @@ public class EditorQuickActions : ModuleRules
 				"CoreUObject",
 				"Engine",
 				"Slate",
-				"SlateCore"
+				"SlateCore",
+				"UnrealEd",
 			}
 		);
 

@@ -19,6 +19,9 @@ public:
 	UFUNCTION(CallInEditor)
 	void AddPrefix();
 
+	UFUNCTION(CallInEditor)
+	void RemoveUnused();
+
 protected:
 	UPROPERTY(EditDefaultsOnly)
 	TMap<UClass*, FString> PrefixMap
