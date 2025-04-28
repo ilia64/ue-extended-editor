@@ -3,11 +3,10 @@
 
 #include "AssetAction/QuickAssetAction.h"
 
+#include "DebugHeader.h"
 #include "EditorUtilityLibrary.h"
 #include "EditorAssetLibrary.h"
-#include "Framework/Notifications/NotificationManager.h"
 #include "Misc/MessageDialog.h"
-#include "Widgets/Notifications/SNotificationList.h"
 
 void UQuickAssetAction::DuplicateAssets(const int32 NumOfDuplicates)
 {
@@ -47,10 +46,44 @@ void UQuickAssetAction::DuplicateAssets(const int32 NumOfDuplicates)
 
 	if (Counter)
 	{
-		FNotificationInfo NotificationInfo(FText::FromString(TEXT("Successfully Duplicated " + FString::FromInt(Counter) + " Assets")));
-		NotificationInfo.bUseLargeFont = true;
-		NotificationInfo.FadeOutDuration = 7.f;
+		Notify(TEXT("Successfully duplicated " + FString::FromInt(Counter) + " assets"));
+	}
+}
 
-		FSlateNotificationManager::Get().AddNotification(NotificationInfo);
+void UQuickAssetAction::AddPrefix()
+{
+	TArray<UObject*> SelectedAssets = UEditorUtilityLibrary::GetSelectedAssets();
+	uint32 Counter{0};
+
+	for (UObject* Asset : SelectedAssets)
+	{
+		if (!Asset)
+		{
+			continue;
+		}
+
+		const UClass* AssetClass = Asset->GetClass();
+		const FString* Prefix = PrefixMap.Find(AssetClass);
+		if (!Prefix || Prefix->IsEmpty())
+		{
+			Print(TEXT("AddPrefix(): No prefix found for " + AssetClass->GetName() + "!"));
+			continue;
+		}
+
+		FString OldName = Asset->GetName();
+		if (OldName.StartsWith(*Prefix))
+		{
+			continue;
+		}
+
+		const FString NewName = *Prefix + OldName;
+		UEditorUtilityLibrary::RenameAsset(Asset, NewName);
+
+		Counter++;
+	}
+
+	if (Counter)
+	{
+		Notify(TEXT("Successfully renamed " + FString::FromInt(Counter) + " assets"));
 	}
 }

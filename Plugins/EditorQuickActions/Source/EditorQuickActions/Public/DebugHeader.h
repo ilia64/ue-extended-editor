@@ -1,6 +1,7 @@
 ﻿#pragma once
 
-#pragma once
+#include "Framework/Notifications/NotificationManager.h"
+#include "Widgets/Notifications/SNotificationList.h"
 
 inline void Print(const FString& Message, const FColor& Color = FColor::Cyan)
 {
@@ -15,4 +16,13 @@ inline void Print(const FString& Message, const FColor& Color = FColor::Cyan)
 inline void PrintError(const FString& Message)
 {
 	Print(Message, FColor::Red);
+}
+
+inline void Notify(const FString& Message)
+{
+	FNotificationInfo NotificationInfo(FText::FromString(Message));
+	NotificationInfo.bUseLargeFont = true;
+	NotificationInfo.FadeOutDuration = 15.f;
+
+	FSlateNotificationManager::Get().AddNotification(NotificationInfo);
 }
