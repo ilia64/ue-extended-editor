@@ -76,6 +76,18 @@ void UQuickAssetAction::AddPrefix()
 			continue;
 		}
 
+		constexpr int32 PrefixMaxChars{2};
+		const int32 UnderscoreIndex = OldName.Find(TEXT("_"));
+		if (UnderscoreIndex != INDEX_NONE && UnderscoreIndex <= PrefixMaxChars)
+		{
+			OldName = OldName.RightChop(UnderscoreIndex + 1);
+		}
+
+		if (Prefix->IsValidIndex(1) && (*Prefix)[1] == TEXT('I'))
+		{
+			OldName.RemoveFromEnd(TEXT("_Inst"), ESearchCase::CaseSensitive);
+		}
+
 		const FString NewName = *Prefix + OldName;
 		UEditorUtilityLibrary::RenameAsset(Asset, NewName);
 
