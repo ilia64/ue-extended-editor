@@ -42,6 +42,7 @@ public class EditorQuickActions : ModuleRules
 				"Slate",
 				"SlateCore",
 				"UnrealEd",
+				"AssetTools",
 			}
 		);
 

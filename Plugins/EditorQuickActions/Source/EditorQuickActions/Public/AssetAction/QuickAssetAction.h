@@ -35,4 +35,7 @@ protected:
 		{UTexture2D::StaticClass(), TEXT("T_")},
 		{USkeletalMeshComponent::StaticClass(), TEXT("SK_")},
 	};
+
+private:
+	void FixUpRedirectors();
 };
