@@ -136,7 +136,7 @@ void UQuickAssetAction::RemoveUnused()
 void UQuickAssetAction::FixUpRedirectors()
 {
 	TArray<UObjectRedirector*> RedirectorsToFix;
-	const FAssetRegistryModule& AssetRegistryModule = FModuleManager::Get().LoadModuleChecked<FAssetRegistryModule>(TEXT("AssetRegistry"));
+	const FAssetRegistryModule& AssetRegistryModule = FModuleManager::LoadModuleChecked<FAssetRegistryModule>(TEXT("AssetRegistry"));
 	const FTopLevelAssetPath& ObjectRedirectorClassPathName = UObjectRedirector::StaticClass()->GetClassPathName();
 
 	FARFilter Filter;
@@ -156,6 +156,6 @@ void UQuickAssetAction::FixUpRedirectors()
 		}
 	}
 
-	const FAssetToolsModule AssetToolsModule = FModuleManager::LoadModuleChecked<FAssetToolsModule>("AssetTools");
+	const FAssetToolsModule& AssetToolsModule = FModuleManager::LoadModuleChecked<FAssetToolsModule>("AssetTools");
 	AssetToolsModule.Get().FixupReferencers(RedirectorsToFix);
 }
