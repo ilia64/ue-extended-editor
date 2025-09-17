@@ -21,9 +21,10 @@ private:
 	TSharedRef<FExtender> CustomContentBrowserMenuExtender(const TArray<FString>& SelectedPaths);
 	void AddContentBrowserMenu_DeleteUnusedAssetButton(FMenuBuilder& MenuBuilder);
 	void OnDeleteUnusedAssetButtonClicked();
+	void OnDeleteEmptyFoldersButtonClicked();
 	void FixUpRedirectors();
 
 	TArray<FString> FolderPathsSelected;
-	
+
 #pragma endregion ContentBrowserMenuExtender
 };

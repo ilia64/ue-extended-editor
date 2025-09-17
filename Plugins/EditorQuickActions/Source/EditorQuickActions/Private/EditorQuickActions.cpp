@@ -58,6 +58,13 @@ void FEditorQuickActionsModule::AddContentBrowserMenu_DeleteUnusedAssetButton(FM
 		FSlateIcon(),
 		FExecuteAction::CreateRaw(this, &FEditorQuickActionsModule::OnDeleteUnusedAssetButtonClicked)
 	);
+
+	MenuBuilder.AddMenuEntry(
+		FText::FromString(TEXT("Delete empty folder")),
+		FText::FromString(TEXT("Button by ilia64")),
+		FSlateIcon(),
+		FExecuteAction::CreateRaw(this, &FEditorQuickActionsModule::OnDeleteEmptyFoldersButtonClicked)
+	);
 }
 
 void FEditorQuickActionsModule::OnDeleteUnusedAssetButtonClicked()
@@ -115,6 +122,78 @@ void FEditorQuickActionsModule::OnDeleteUnusedAssetButtonClicked()
 	else
 	{
 		Debug::Notify(TEXT("No unused assets in selected folder"));
+	}
+}
+
+void FEditorQuickActionsModule::OnDeleteEmptyFoldersButtonClicked()
+{
+	if (FolderPathsSelected.Num() > 1)
+	{
+		Debug::PrintError(TEXT("You can only do this with one folder"));
+		return;
+	}
+
+	FixUpRedirectors();
+
+	TArray<FString> FolderPathsArray = UEditorAssetLibrary::ListAssets(FolderPathsSelected[0], true, true);
+	uint32 Counter = 0;
+	FString EmptyFolderPathNames;
+	TArray<FString> EmptyFolderPaths;
+
+	for (const FString& FolderPathName : FolderPathsArray)
+	{
+		if (FolderPathName.Contains(TEXT("Developers")) ||
+			FolderPathName.Contains(TEXT("Collections")) ||
+			FolderPathName.Contains(TEXT("__ExternalActors__")) ||
+			FolderPathName.Contains(TEXT("__ExternalObjects__"))
+		)
+		{
+			continue;
+		}
+
+		if (!UEditorAssetLibrary::DoesDirectoryExist(FolderPathName))
+		{
+			continue;
+		}
+
+		if (!UEditorAssetLibrary::DoesDirectoryHaveAssets(FolderPathName))
+		{
+			EmptyFolderPathNames.Append(FolderPathName);
+			EmptyFolderPathNames.Append(TEXT("\n"));
+
+			EmptyFolderPaths.Add(FolderPathName);
+		}
+	}
+
+	if (EmptyFolderPaths.IsEmpty())
+	{
+		Debug::ShowMsgDialog(EAppMsgType::Ok, TEXT("No empty folder found"));
+		return;
+	}
+
+	const EAppReturnType::Type ConfirmResult = Debug::ShowMsgDialog(EAppMsgType::OkCancel, TEXT("Empty folders found in:\n") + EmptyFolderPathNames + TEXT("\n\nDelete all?"), false);
+	if (ConfirmResult != EAppReturnType::Cancel)
+	{
+		return;
+	}
+
+	for (const FString& EmptyFolderPath : EmptyFolderPaths)
+	{
+		const bool bResult = UEditorAssetLibrary::DeleteDirectory(EmptyFolderPath);
+
+		if (bResult)
+		{
+			++Counter;
+		}
+		else
+		{
+			Debug::PrintError(TEXT("Failed to delete folder ") + EmptyFolderPath);
+		}
+	}
+
+	if (Counter > 0)
+	{
+		Debug::Notify(TEXT("Successfully deleted ") + FString::FromInt(Counter) + TEXT(" folders"));
 	}
 }
 
