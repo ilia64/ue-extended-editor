@@ -30,6 +30,7 @@ public class EditorQuickActions : ModuleRules
 				"Core",
 				"Blutility",
 				"EditorScriptingUtilities",
+				"ContentBrowser"
 			}
 		);
 

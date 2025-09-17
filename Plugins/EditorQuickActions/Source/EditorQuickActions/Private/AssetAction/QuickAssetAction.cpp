@@ -49,7 +49,7 @@ void UQuickAssetAction::DuplicateAssets(const int32 NumOfDuplicates)
 
 	if (Counter)
 	{
-		Notify(TEXT("Successfully duplicated " + FString::FromInt(Counter) + " assets"));
+		Debug::Notify(TEXT("Successfully duplicated " + FString::FromInt(Counter) + " assets"));
 	}
 }
 
@@ -69,7 +69,7 @@ void UQuickAssetAction::AddPrefix()
 		const FString* Prefix = PrefixMap.Find(AssetClass);
 		if (!Prefix || Prefix->IsEmpty())
 		{
-			Print(TEXT("AddPrefix(): No prefix found for " + AssetClass->GetName() + "!"));
+			Debug::Print(TEXT("AddPrefix(): No prefix found for " + AssetClass->GetName() + "!"));
 			continue;
 		}
 
@@ -99,7 +99,7 @@ void UQuickAssetAction::AddPrefix()
 
 	if (Counter)
 	{
-		Notify(TEXT("Successfully renamed " + FString::FromInt(Counter) + " assets"));
+		Debug::Notify(TEXT("Successfully renamed " + FString::FromInt(Counter) + " assets"));
 	}
 }
 
@@ -121,7 +121,7 @@ void UQuickAssetAction::RemoveUnused()
 
 	if (UnusedAssets.IsEmpty())
 	{
-		Notify(TEXT("No unused assets!"));
+		Debug::Notify(TEXT("No unused assets!"));
 
 		return;
 	}
@@ -129,7 +129,7 @@ void UQuickAssetAction::RemoveUnused()
 	const int32 DeleteCount = ObjectTools::DeleteAssets(UnusedAssets);
 	if (DeleteCount > 0)
 	{
-		Notify(TEXT("Successfully deleted " + FString::FromInt(DeleteCount) + " unused assets"));
+		Debug::Notify(TEXT("Successfully deleted " + FString::FromInt(DeleteCount) + " unused assets"));
 	}
 }
 
