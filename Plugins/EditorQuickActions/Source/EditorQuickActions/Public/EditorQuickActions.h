@@ -5,6 +5,10 @@
 #include "CoreMinimal.h"
 #include "Modules/ModuleManager.h"
 
+/*
+ *	Для поиска позиции menu/projectSettings -> Display UI Extension Points
+ */
+
 class FEditorQuickActionsModule final : public IModuleInterface
 {
 public:
@@ -13,18 +17,18 @@ public:
 
 private:
 #pragma region ContentBrowserMenuExtender
-	/*
-	 *	Для поиска позиции menu/progect settings -> Display UI Extension Points
-	 */
-
 	void InitContentBrowserMenuExtension();
 	TSharedRef<FExtender> CustomContentBrowserMenuExtender(const TArray<FString>& SelectedPaths);
 	void AddContentBrowserMenu_DeleteUnusedAssetButton(FMenuBuilder& MenuBuilder);
 	void OnDeleteUnusedAssetButtonClicked();
 	void OnDeleteEmptyFoldersButtonClicked();
 	void FixUpRedirectors();
-
 	TArray<FString> FolderPathsSelected;
-
 #pragma endregion ContentBrowserMenuExtender
+
+#pragma region CustomEditorTab
+	void RegisterTabs();
+	void OnAdvanceDeletionButtonClicked();
+	TSharedRef<SDockTab> OnSpawnAdvanceDeletionTab(const FSpawnTabArgs& SpawnTabArgs);
+#pragma endregion CustomEditorTab
 };

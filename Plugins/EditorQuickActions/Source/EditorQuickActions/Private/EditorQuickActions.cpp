@@ -17,6 +17,7 @@ class FAssetRegistryModule;
 void FEditorQuickActionsModule::StartupModule()
 {
 	InitContentBrowserMenuExtension();
+	RegisterTabs();
 }
 
 void FEditorQuickActionsModule::ShutdownModule()
@@ -64,6 +65,13 @@ void FEditorQuickActionsModule::AddContentBrowserMenu_DeleteUnusedAssetButton(FM
 		FText::FromString(TEXT("Button by ilia64")),
 		FSlateIcon(),
 		FExecuteAction::CreateRaw(this, &FEditorQuickActionsModule::OnDeleteEmptyFoldersButtonClicked)
+	);
+
+	MenuBuilder.AddMenuEntry(
+		FText::FromString(TEXT("Advance Deletion")),
+		FText::FromString(TEXT("Button by ilia64")),
+		FSlateIcon(),
+		FExecuteAction::CreateRaw(this, &FEditorQuickActionsModule::OnAdvanceDeletionButtonClicked)
 	);
 }
 
@@ -225,6 +233,26 @@ void FEditorQuickActionsModule::FixUpRedirectors()
 }
 
 #pragma endregion ContentBrowserMenuExtender
+
+#pragma region CustomEditorTab
+
+void FEditorQuickActionsModule::RegisterTabs()
+{
+	FGlobalTabmanager::Get()->RegisterNomadTabSpawner(FName("AdvancedDeletion"), FOnSpawnTab::CreateRaw(this, &FEditorQuickActionsModule::OnSpawnAdvanceDeletionTab))
+	                        .SetDisplayName(FText::FromString(TEXT("Advanced Deletion")));
+}
+
+void FEditorQuickActionsModule::OnAdvanceDeletionButtonClicked()
+{
+	FGlobalTabmanager::Get()->TryInvokeTab(FName("AdvancedDeletion"));
+}
+
+TSharedRef<SDockTab> FEditorQuickActionsModule::OnSpawnAdvanceDeletionTab(const FSpawnTabArgs& SpawnTabArgs)
+{
+	return SNew(SDockTab).TabRole(MajorTab);
+}
+
+#pragma endregion CustomEditorTab
 
 #undef LOCTEXT_NAMESPACE
 
